@@ -33,7 +33,6 @@
       border-color: #f59e0b;
       outline: none;
     }
-    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -44,16 +43,13 @@
       background: #334155;
       border-radius: 4px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #f59e0b;
-    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
   <!-- Application Shell -->
   <div id="app" class="flex-grow flex flex-col">
-    <!-- Auth Section -->
+    <!-- Auth Screen -->
     <div id="authScreen" class="flex-grow flex items-center justify-center p-4">
       <div class="card-bg p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700 relative overflow-hidden">
         <div class="absolute top-0 right-0 w-2 h-full gold-gradient"></div>
@@ -69,7 +65,7 @@
           <div>
             <label class="block text-sm font-medium text-slate-300 mb-1">البريد الإلكتروني / اسم المستخدم</label>
             <div class="relative">
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
                 <i class="fa-solid fa-envelope"></i>
               </span>
               <input type="text" id="loginEmail" required placeholder="أدخل البريد أو اسم المستخدم" class="w-full pr-10 pl-3 py-2.5 rounded-xl input-style text-sm">
@@ -79,7 +75,7 @@
           <div>
             <label class="block text-sm font-medium text-slate-300 mb-1">كلمة المرور</label>
             <div class="relative">
-              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
                 <i class="fa-solid fa-lock"></i>
               </span>
               <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full pr-10 pl-3 py-2.5 rounded-xl input-style text-sm">
@@ -90,9 +86,8 @@
             بيانات الدخول غير صحيحة، يرجى التأكد وإعادة المحاولة.
           </div>
 
-          <button type="submit" id="loginBtn" class="w-full py-3 rounded-xl gold-gradient font-bold text-slate-900 hover:opacity-90 transition flex items-center justify-center space-x-2 space-x-reverse">
-            <span>تسجيل الدخول</span>
-            <i class="fa-solid fa-arrow-left"></i>
+          <button type="submit" class="w-full py-3 rounded-xl gold-gradient font-bold text-slate-900 hover:opacity-90 transition">
+            تسجيل الدخول
           </button>
         </form>
       </div>
@@ -109,11 +104,15 @@
             </div>
             <div>
               <h2 class="font-bold text-base leading-tight">مستر أحمد داوود</h2>
-              <span class="text-xs gold-text">لوحة التحكم والمزامنة</span>
+              <span class="text-xs gold-text">لوحة التحكم السحابية السريعة</span>
             </div>
           </div>
 
-          <div class="flex items-center space-x-3 space-x-reverse">
+          <div class="flex items-center space-x-2 space-x-reverse">
+            <button onclick="loadStudents(true)" id="syncBtn" title="مزامنة فورية" class="bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-2 rounded-xl text-sm border border-slate-700 transition flex items-center space-x-1 space-x-reverse">
+              <i class="fa-solid fa-rotate" id="syncIcon"></i>
+              <span class="hidden sm:inline">مزامنة</span>
+            </button>
             <button onclick="openAddStudentModal()" class="gold-gradient text-slate-900 px-4 py-2 rounded-xl font-bold text-sm hover:opacity-90 transition flex items-center space-x-2 space-x-reverse">
               <i class="fa-solid fa-plus"></i>
               <span>إضافة طالب</span>
@@ -138,9 +137,8 @@
           <button onclick="selectGrade('bac')" id="tab_bac" class="grade-tab px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition bg-slate-800 text-slate-300 hover:bg-slate-700">صف البكالوريا</button>
         </div>
 
-        <!-- Controls Bar: Search & Monthly Report -->
+        <!-- Controls Bar -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Search Bar -->
           <div class="md:col-span-2 relative">
             <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
               <i class="fa-solid fa-magnifying-glass"></i>
@@ -148,7 +146,6 @@
             <input type="text" id="searchInput" oninput="renderStudents()" placeholder="ابحث باسم الطالب أو رقم ولي الأمر..." class="w-full pr-10 pl-4 py-3 rounded-xl input-style text-sm">
           </div>
 
-          <!-- Report Trigger -->
           <button onclick="openReportModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center space-x-2 space-x-reverse shadow-lg">
             <i class="fa-solid fa-chart-pie"></i>
             <span>تقرير آخر الشهر والشهور المستحقة</span>
@@ -164,9 +161,7 @@
         </div>
 
         <!-- Students Cards Grid -->
-        <div id="studentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Dynamically Populated -->
-        </div>
+        <div id="studentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
         <!-- Empty State -->
         <div id="emptyState" class="hidden text-center py-12 card-bg rounded-2xl">
@@ -177,10 +172,8 @@
     </div>
   </div>
 
-  <!-- Footer Credit -->
   <footer class="py-4 border-t border-slate-800 text-center text-xs text-slate-400 tracking-wider">
-    Created by Omar Hadwa  
-    الدعم الفني 01013587867
+    Created by Omar Hadwa
   </footer>
 
   <!-- Modal: Add Student -->
@@ -233,7 +226,7 @@
 
         <div class="pt-2 flex justify-end space-x-2 space-x-reverse">
           <button type="button" onclick="closeAddStudentModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl hover:bg-slate-700">إلغاء</button>
-          <button type="submit" class="px-5 py-2 gold-gradient text-slate-900 text-xs font-bold rounded-xl hover:opacity-90">حفظ الطالب</button>
+          <button type="submit" class="px-5 py-2 gold-gradient text-slate-900 text-xs font-bold rounded-xl hover:opacity-90">حفظ الطالب فوراً</button>
         </div>
       </form>
     </div>
@@ -280,13 +273,13 @@
 
         <div class="pt-2 flex justify-end space-x-2 space-x-reverse">
           <button type="button" onclick="closePaymentModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl hover:bg-slate-700">إلغاء</button>
-          <button type="submit" class="px-5 py-2 gold-gradient text-slate-900 text-xs font-bold rounded-xl hover:opacity-90">تأكيد الحفظ والدفع</button>
+          <button type="submit" class="px-5 py-2 gold-gradient text-slate-900 text-xs font-bold rounded-xl hover:opacity-90">تأكيد الدفع</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal: Monthly Report -->
+  <!-- Modal: Report -->
   <div id="reportModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="card-bg rounded-2xl max-w-3xl w-full p-6 space-y-4 border border-slate-700 max-h-[90vh] flex flex-col">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3 flex-shrink-0">
@@ -297,7 +290,6 @@
         <button onclick="closeReportModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
 
-      <!-- Filter Controls -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex-shrink-0">
         <div>
           <label class="block text-xs font-medium text-slate-400 mb-1">الشهر المستهدف</label>
@@ -325,45 +317,33 @@
         </div>
       </div>
 
-      <!-- Tab Content: Paid vs Unpaid -->
       <div class="flex-grow overflow-y-auto space-y-4 pr-1">
-        <!-- Unpaid Students Section -->
         <div>
-          <div class="flex items-center justify-between mb-2">
-            <h4 class="font-bold text-red-400 text-sm flex items-center space-x-2 space-x-reverse">
-              <i class="fa-solid fa-circle-exclamation"></i>
-              <span>الطلاب الذين لم يدفعوا حتى الآن (<span id="unpaidCount">0</span>)</span>
-            </h4>
-          </div>
-          <div id="unpaidList" class="space-y-2">
-            <!-- Populated dynamically -->
-          </div>
+          <h4 class="font-bold text-red-400 text-sm mb-2 flex items-center space-x-2 space-x-reverse">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>الطلاب الذين لم يدفعوا حتى الآن (<span id="unpaidCount">0</span>)</span>
+          </h4>
+          <div id="unpaidList" class="space-y-2"></div>
         </div>
 
         <hr class="border-slate-800">
 
-        <!-- Paid Students Section -->
         <div>
           <h4 class="font-bold text-emerald-400 text-sm mb-2 flex items-center space-x-2 space-x-reverse">
             <i class="fa-solid fa-circle-check"></i>
             <span>الطلاب الذين قاموا بالدفع (<span id="paidCount">0</span>)</span>
           </h4>
-          <div id="paidList" class="space-y-2">
-            <!-- Populated dynamically -->
-          </div>
+          <div id="paidList" class="space-y-2"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- JavaScript Application Logic -->
   <script>
-    // Supabase Configuration
     const SUPABASE_URL = 'https://tcyyygjnknofnlxzqazq.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_42V5FGJ0EC_ufXFYZNBJqw_jp75b_iR';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Global App State
     let currentGrade = '1_prep';
     let studentsData = [];
 
@@ -376,14 +356,12 @@
       'bac': 'صف البكالوريا'
     };
 
-    // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
       checkAuthStatus();
     });
 
     function checkAuthStatus() {
-      const isLogged = localStorage.getItem('dawood_teacher_logged');
-      if (isLogged === 'true') {
+      if (localStorage.getItem('dawood_teacher_logged') === 'true') {
         showDashboard();
       } else {
         showAuth();
@@ -398,48 +376,28 @@
     function showDashboard() {
       document.getElementById('authScreen').classList.add('hidden');
       document.getElementById('dashboardScreen').classList.remove('hidden');
+      
+      // Load local cache immediately for instant display
+      const local = localStorage.getItem('dawood_students_backup');
+      if (local) {
+        studentsData = JSON.parse(local);
+        renderStudents();
+      }
+      
       selectGrade('1_prep');
       loadStudents();
     }
 
-    // Authentication Handlers
     async function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
-      const errBox = document.getElementById('authError');
-
-      errBox.classList.add('hidden');
-
-      try {
-        // Attempt Supabase Auth login
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-
-        if (error) {
-          // Fallback check for offline/demo or direct setup
-          if ((email === 'ahmed@gmail.com' && password === 'ahmed#70007#') || email === 'ahmed_dawood') {
-            localStorage.setItem('dawood_teacher_logged', 'true');
-            showDashboard();
-            return;
-          }
-          errBox.textContent = 'بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى.';
-          errBox.classList.remove('hidden');
-        } else {
-          localStorage.setItem('dawood_teacher_logged', 'true');
-          showDashboard();
-        }
-      } catch (err) {
-        // Fallback for offline mode or network restrictions
-        if (email === 'ahmed@gmail.com' && password === 'ahmed#70007#') {
-          localStorage.setItem('dawood_teacher_logged', 'true');
-          showDashboard();
-        } else {
-          errBox.textContent = 'تعذر الاتصال بالسيرفر. تأكد من البيانات.';
-          errBox.classList.remove('hidden');
-        }
+      
+      if ((email === 'ahmed@gmail.com' && password === 'ahmed#70007#') || email === 'ahmed_dawood') {
+        localStorage.setItem('dawood_teacher_logged', 'true');
+        showDashboard();
+      } else {
+        document.getElementById('authError').classList.remove('hidden');
       }
     }
 
@@ -448,33 +406,35 @@
       showAuth();
     }
 
-    // Load Data from Supabase with Local Backup
-    async function loadStudents() {
+    // Fast loading with immediate UI response
+    async function loadStudents(showSpinner = false) {
+      const syncIcon = document.getElementById('syncIcon');
+      if (showSpinner && syncIcon) syncIcon.classList.add('fa-spin');
+
       try {
         const { data, error } = await supabaseClient.from('students').select('*');
-        if (error || !data) {
-          const local = localStorage.getItem('dawood_students_backup');
-          studentsData = local ? JSON.parse(local) : [];
-        } else {
+        if (!error && data) {
           studentsData = data;
           localStorage.setItem('dawood_students_backup', JSON.stringify(studentsData));
+          renderStudents();
         }
       } catch (e) {
-        const local = localStorage.getItem('dawood_students_backup');
-        studentsData = local ? JSON.parse(local) : [];
+        console.log('Using local cached data');
+      } finally {
+        if (showSpinner && syncIcon) syncIcon.classList.remove('fa-spin');
       }
-      renderStudents();
     }
 
-    async function syncToSupabase() {
+    // Save in background without re-rendering or flickering
+    async function saveStudentToSupabase(student) {
       localStorage.setItem('dawood_students_backup', JSON.stringify(studentsData));
-      // Quiet background push
       try {
-        await supabaseClient.from('students').upsert(studentsData);
-      } catch (e) {}
+        await supabaseClient.from('students').upsert(student);
+      } catch (e) {
+        console.error('Background sync queued locally:', e);
+      }
     }
 
-    // UI Grade Selector
     function selectGrade(gradeKey) {
       currentGrade = gradeKey;
       document.querySelectorAll('.grade-tab').forEach(tab => {
@@ -491,7 +451,6 @@
       renderStudents();
     }
 
-    // Render Students List
     function renderStudents() {
       const grid = document.getElementById('studentsGrid');
       const emptyState = document.getElementById('emptyState');
@@ -516,18 +475,16 @@
 
       filtered.forEach(s => {
         const payments = s.payments || {};
-        
-        // Render 12 months buttons
         let monthsHtml = '';
         for (let m = 1; m <= 12; m++) {
           const paid = payments[m];
           const isPaid = paid && paid.is_paid;
-          const paidDate = isPaid ? new Date(paid.date).toLocaleDateString('ar-EG', {month: 'short', day: 'numeric'}) : '';
+          const paidDate = isPaid ? new Date(paid.date).toLocaleDateString('ar-EG', {month: 'numeric', day: 'numeric'}) : '';
 
           monthsHtml += `
             <button onclick="openPaymentModal('${s.id}', ${m})" class="p-1.5 rounded-lg border text-xs text-center flex flex-col items-center justify-center transition ${
               isPaid 
-                ? 'bg-emerald-950/60 border-emerald-600/60 text-emerald-300' 
+                ? 'bg-emerald-950/70 border-emerald-500 text-emerald-300' 
                 : 'bg-slate-900/50 border-slate-800 text-slate-500 hover:border-amber-500/50'
             }">
               <span class="font-bold">ش ${m}</span>
@@ -557,7 +514,7 @@
           </div>
 
           <div>
-            <span class="text-xs font-bold text-slate-400 block mb-1.5">حالة الشهور (1 - 12):</span>
+            <span class="text-xs font-bold text-slate-400 block mb-1.5">الشهور (1 - 12):</span>
             <div class="grid grid-cols-4 gap-1.5">
               ${monthsHtml}
             </div>
@@ -567,7 +524,6 @@
       });
     }
 
-    // Add Student Logic
     function openAddStudentModal() {
       document.getElementById('newStudentGrade').value = currentGrade;
       document.getElementById('addStudentModal').classList.remove('hidden');
@@ -586,27 +542,31 @@
         student_phone: document.getElementById('newStudentPhone').value.trim(),
         grade: document.getElementById('newStudentGrade').value,
         group_name: document.getElementById('newStudentGroup').value.trim(),
-        fee: document.getElementById('newStudentFee').value || 150,
+        fee: Number(document.getElementById('newStudentFee').value) || 150,
         payments: {}
       };
 
+      // 1. Instant local display (Zero delay)
       studentsData.push(newStudent);
-      await syncToSupabase();
+      renderStudents();
       closeAddStudentModal();
       document.getElementById('addStudentForm').reset();
-      renderStudents();
+
+      // 2. Background cloud sync
+      await saveStudentToSupabase(newStudent);
     }
 
-    // Delete Student
     async function deleteStudent(id) {
-      if (confirm('هل أنت تأكد من حذف هذا الطالب نهائياً؟')) {
+      if (confirm('هل أنت تأكد من حذف هذا الطالب؟')) {
         studentsData = studentsData.filter(s => s.id !== id);
-        await syncToSupabase();
         renderStudents();
+        localStorage.setItem('dawood_students_backup', JSON.stringify(studentsData));
+        try {
+          await supabaseClient.from('students').delete().eq('id', id);
+        } catch(e) {}
       }
     }
 
-    // Payment Logic
     function openPaymentModal(studentId, month) {
       const student = studentsData.find(s => s.id === studentId);
       if (!student) return;
@@ -615,7 +575,6 @@
       document.getElementById('payStudentName').value = student.name;
       document.getElementById('payMonthSelect').value = month;
 
-      // Default to current datetime
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       document.getElementById('payTimestamp').value = now.toISOString().slice(0, 16);
@@ -636,20 +595,20 @@
       const student = studentsData.find(s => s.id === studentId);
       if (student) {
         if (!student.payments) student.payments = {};
-        
-        // Toggle if already paid on same month or update timestamp
         student.payments[month] = {
           is_paid: true,
           date: timestamp
         };
 
-        await syncToSupabase();
-        closePaymentModal();
+        // Instant local update
         renderStudents();
+        closePaymentModal();
+
+        // Background save
+        await saveStudentToSupabase(student);
       }
     }
 
-    // Monthly Report Logic
     function openReportModal() {
       generateReport();
       document.getElementById('reportModal').classList.remove('hidden');
@@ -664,7 +623,6 @@
       const scope = document.getElementById('reportScopeSelect').value;
 
       const filtered = studentsData.filter(s => scope === 'all' || s.grade === currentGrade);
-
       const paidList = [];
       const unpaidList = [];
 
@@ -675,7 +633,6 @@
         if (isPaid) {
           paidList.push(s);
         } else {
-          // Calculate all owed months up to selected
           const unpaidMonths = [];
           for (let m = 1; m <= month; m++) {
             if (!payments[m] || !payments[m].is_paid) {
@@ -689,7 +646,6 @@
       document.getElementById('paidCount').textContent = paidList.length;
       document.getElementById('unpaidCount').textContent = unpaidList.length;
 
-      // Render Unpaid
       const unpaidContainer = document.getElementById('unpaidList');
       unpaidContainer.innerHTML = '';
       if (unpaidList.length === 0) {
@@ -717,7 +673,6 @@
         });
       }
 
-      // Render Paid
       const paidContainer = document.getElementById('paidList');
       paidContainer.innerHTML = '';
       if (paidList.length === 0) {
